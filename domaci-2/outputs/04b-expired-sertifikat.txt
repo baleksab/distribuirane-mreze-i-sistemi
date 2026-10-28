@@ -1,0 +1,4 @@
+subject=OU=Domain Control Validated, OU=PositiveSSL Wildcard, CN=*.badssl.com
+issuer=C=GB, ST=Greater Manchester, L=Salford, O=COMODO CA Limited, CN=COMODO RSA Domain Validation Secure Server CA
+notBefore=Apr  9 00:00:00 2015 GMT
+notAfter=Apr 12 23:59:59 2015 GMT

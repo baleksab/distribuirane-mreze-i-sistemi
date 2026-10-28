@@ -1,0 +1,5 @@
+subject=C=US, ST=California, L=San Francisco, O=BadSSL, CN=*.badssl.com
+issuer=C=US, ST=California, L=San Francisco, O=BadSSL, CN=*.badssl.com
+notBefore=Oct 27 21:00:20 2026 GMT
+notAfter=Oct 26 21:00:20 2028 GMT
+sha256 Fingerprint=BB:A2:1B:74:3C:B5:A6:30:6A:A5:51:F9:57:BF:F0:97:A4:50:FE:BE:D2:1E:B0:CB:14:DA:12:3E:E2:71:AC:A7

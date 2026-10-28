@@ -1,0 +1,20 @@
+$ nslookup intranet.firma.internal
+Server:		89.216.1.30
+Address:	89.216.1.30#53
+
+** server can't find intranet.firma.internal: NXDOMAIN
+
+
+$ dig intranet.firma.internal
+;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 544
+;; flags: qr rd ra ad; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+;; AUTHORITY SECTION:
+.			3478	IN	SOA	a.root-servers.net. nstld.verisign-grs.com. 2026102804 1800 900 604800 86400
+;; Query time: 16 msec
+
+$ nslookup -type=NS firma.internal
+Server:		89.216.1.30
+Address:	89.216.1.30#53
+
+** server can't find firma.internal: NXDOMAIN
+

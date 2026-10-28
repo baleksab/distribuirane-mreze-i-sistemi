@@ -1,0 +1,10 @@
+$ java -cp out HttpProba https://expired.badssl.com
+javax.net.ssl.SSLHandshakeException
+(certificate_expired) PKIX path validation failed: java.security.cert.CertPathValidatorException: validity check failed
+Trajanje: 478 ms
+
+$ java -cp out HttpProba https://self-signed.badssl.com
+javax.net.ssl.SSLHandshakeException
+(certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+Trajanje: 475 ms
+

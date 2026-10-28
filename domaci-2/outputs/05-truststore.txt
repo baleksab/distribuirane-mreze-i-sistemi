@@ -1,0 +1,21 @@
+$ keytool -importcert -alias self-signed-badssl -file self-signed.badssl.com.pem -keystore moj-truststore.jks -storepass changeit -noprompt
+Certificate was added to keystore
+
+$ keytool -list -keystore moj-truststore.jks -storepass changeit
+Keystore type: PKCS12
+Keystore provider: SUN
+
+Your keystore contains 1 entry
+
+self-signed-badssl, Oct 28, 2026, trustedCertEntry, 
+Certificate fingerprint (SHA-256): BB:A2:1B:74:3C:B5:A6:30:6A:A5:51:F9:57:BF:F0:97:A4:50:FE:BE:D2:1E:B0:CB:14:DA:12:3E:E2:71:AC:A7
+
+$ java -Djavax.net.ssl.trustStore=moj-truststore.jks -Djavax.net.ssl.trustStorePassword=changeit -cp out HttpProba https://self-signed.badssl.com
+Status: 200
+{accept-ranges=[bytes], cache-control=[no-store], connection=[keep-alive], content-length=[502], content-type=[text/html], date=[Wed, 28 Oct 2026 22:52:57 GMT], etag=["6ae110f4-1f6"], last-modified=[Tue, 27 Oct 2026 21:00:36 GMT], server=[nginx/1.10.3 (Ubuntu)]}
+Trajanje: 744 ms
+
+$ isti truststore, ali expired.badssl.com (i dalje mora da padne)
+javax.net.ssl.SSLHandshakeException
+(certificate_unknown) PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+Trajanje: 382 ms

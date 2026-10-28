@@ -1,0 +1,15 @@
+$ java -cp out HttpProba http://localhost:9090
+java.io.IOException
+HTTP/1.1 header parser received no bytes
+Trajanje: 35 ms
+
+$ java -cp out HttpProba http://localhost:9091
+java.net.ConnectException
+Connection refused (connect failed)
+Trajanje: 38 ms
+
+$ java -cp out HttpProba http://10.255.255.1
+java.net.http.HttpConnectTimeoutException
+HTTP connect timed out
+Trajanje: 3030 ms
+
