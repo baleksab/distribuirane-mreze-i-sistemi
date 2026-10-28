@@ -1,0 +1,21 @@
+# IntelliJ
+IntelliJIdea2025.2
+Toolbox
+bl
+consentOptions
+crl
+      <homePath value="/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home" />
+      <name value="openjdk-21" />
+      <homePath value="/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home" />
+      <homePath value="/opt/homebrew/opt/openjdk@25/libexec/openjdk.jdk/Contents/Home" />
+# VS Code settings
+# Re-run on default java (27)
+openjdk version "27.0.1.0.3" 2026-10-24
+heap -Xmx32m: 15
+heap -Xmx128m: 63
+stack -Xss256k run1: 1478
+stack -Xss256k run2: 1478
+stack -Xss256k run3: 1478
+stack -Xss2m run1: 45347
+stack -Xss2m run2: 45109
+stack -Xss2m run3: 46398

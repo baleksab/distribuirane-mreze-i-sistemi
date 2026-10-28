@@ -1,0 +1,20 @@
+$ lsof -nP -iTCP -sTCP:LISTEN -a -p 13251
+COMMAND   PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+java    13251 c425    5u  IPv6 0xe11cc895889699fc      0t0  TCP *:9090 (LISTEN)
+
+$ netstat -anp tcp | grep 9090
+Proto Recv-Q Send-Q  Local Address          Foreign Address        (state)    
+tcp46      0      0  *.9090                 *.*                    LISTEN     
+
+$ jcmd 13251 Thread.print | grep -A2 worker-
+"worker-1" #25 [27395] prio=5 os_prio=31 cpu=0.12ms elapsed=5.70s tid=0x00000075b111f000 nid=27395 waiting on condition  [0x000000016d6e6000]
+   java.lang.Thread.State: TIMED_WAITING (sleeping)
+	at java.lang.Thread.sleepNanos0(java.base@25.0.4.1/Native Method)
+--
+"worker-2" #26 [33027] prio=5 os_prio=31 cpu=0.05ms elapsed=5.69s tid=0x00000075b111f800 nid=33027 waiting on condition  [0x000000016d8f2000]
+   java.lang.Thread.State: TIMED_WAITING (sleeping)
+	at java.lang.Thread.sleepNanos0(java.base@25.0.4.1/Native Method)
+--
+"worker-3" #27 [43267] prio=5 os_prio=31 cpu=0.04ms elapsed=5.69s tid=0x00000075b11d8000 nid=43267 waiting on condition  [0x000000016dafe000]
+   java.lang.Thread.State: TIMED_WAITING (sleeping)
+	at java.lang.Thread.sleepNanos0(java.base@25.0.4.1/Native Method)

@@ -1,0 +1,35 @@
+# HEAP: number of 1 MB arrays
+-Xmx32m run1: 15
+-Xmx32m run2: 15
+-Xmx32m run3: 15
+-Xmx128m run1: 63
+-Xmx128m run2: 63
+-Xmx128m run3: 63
+# STACK: recursion depth
+-Xss256k run1: 1479
+-Xss256k run2: 1479
+-Xss256k run3: 1479
+-Xss2m run1: 45261
+-Xss2m run2: 45664
+-Xss2m run3: 46202
+# default GC / heap info
+   size_t G1HeapRegionSize                         = 2097152                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 4294967296                                {product} {ergonomic}
+     intx ThreadStackSize                          = 2048                                   {pd product} {default}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseSerialGC                              = false                                     {product} {default}
+# with Serial GC
+-XX:+UseSerialGC -Xmx32m: 28
+-XX:+UseSerialGC -Xmx128m: 118
+# Encoding
+original: Čačak, Šabac, Žabalj, Ćuprija, Đerdap
+as 1250 : ÄŚaÄŤak, Ĺ abac, Ĺ˝abalj, Ä†uprija, Ä�erdap
+Č U+010C  UTF-8 = C4 8C  -> windows-1250: ÄŚ (U+00C4 U+015A)
+č U+010D  UTF-8 = C4 8D  -> windows-1250: ÄŤ (U+00C4 U+0164)
+Š U+0160  UTF-8 = C5 A0  -> windows-1250: Ĺ  (U+0139 U+00A0)
+Ž U+017D  UTF-8 = C5 BD  -> windows-1250: Ĺ˝ (U+0139 U+02DD)
+Ć U+0106  UTF-8 = C4 86  -> windows-1250: Ä† (U+00C4 U+2020)
+Đ U+0110  UTF-8 = C4 90  -> windows-1250: Ä� (U+00C4 U+FFFD)
+00000000: c48c 61c4 8d61 6b2c 20c5 a061 6261 632c  ..a..ak, ..abac,
+00000010: 20c5 bd61 6261 6c6a 2c20 c486 7570 7269   ..abalj, ..upri
+00000020: 6a61 2c20 c490 6572 6461 70              ja, ..erdap

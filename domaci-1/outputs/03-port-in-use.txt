@@ -1,0 +1,13 @@
+# Zombie 2nd process: threads still alive
+3
+# Fix A: different port, first process untouched
+PID 13351
+Slušam na portu 9091
+java      13251 c425    5u  IPv6 0xe11cc895889699fc      0t0  TCP *:9090 (LISTEN)
+java      13351 c425    5u  IPv6 0xe23beae93f5ab01d      0t0  TCP *:9091 (LISTEN)
+# Fix B: stop first process, reuse 9090
+$ lsof -ti :9090
+13251
+PID 13384
+Slušam na portu 9090
+java      13384 c425    5u  IPv6 0x51a304e5c82b5556      0t0  TCP *:9090 (LISTEN)

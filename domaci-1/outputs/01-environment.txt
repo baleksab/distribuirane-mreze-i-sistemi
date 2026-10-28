@@ -1,0 +1,25 @@
+$ java -version
+openjdk version "27.0.1.0.3" 2026-10-24
+OpenJDK Runtime Environment Homebrew (build 27.0.1.0.3)
+OpenJDK 64-Bit Server VM Homebrew (build 27.0.1.0.3, mixed mode, sharing)
+$ which -a java
+/usr/bin/java
+$ echo $JAVA_HOME
+[]
+$ /usr/libexec/java_home -V
+Matching Java Virtual Machines (2):
+    27.0.1.0.3 (arm64) "Homebrew" - "OpenJDK 27.0.1.0.3" /opt/homebrew/Cellar/openjdk/27.0.1.0.3/libexec/openjdk.jdk/Contents/Home
+    25.0.4.1 (arm64) "Homebrew" - "OpenJDK 25.0.4.1" /opt/homebrew/Cellar/openjdk@25/25.0.4.1/libexec/openjdk.jdk/Contents/Home
+/opt/homebrew/Cellar/openjdk/27.0.1.0.3/libexec/openjdk.jdk/Contents/Home
+$ mvn -v
+Apache Maven 3.10.0 (c43a36b8d67be7e0805a411bc0898af1a51f5472)
+Maven home: /opt/homebrew/Cellar/maven/3.10.0/libexec
+Java version: 27.0.1.0.3, vendor: Homebrew, runtime: /opt/homebrew/Cellar/openjdk/27.0.1.0.3/libexec/openjdk.jdk/Contents/Home
+Default locale: en_US, platform encoding: UTF-8, time zone: Europe/Belgrade
+OS name: "mac os x", version: "27.2", arch: "aarch64", family: "mac"
+$ head -n 40 $(which mvn)
+2:JAVA_HOME="${JAVA_HOME:-/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home}" exec "/opt/homebrew/Cellar/maven/3.10.0/libexec/bin/mvn"  "$@"
+$ ls -l /opt/homebrew/bin/mvn
+lrwxr-xr-x@ 1 c425  admin  30 Oct 28 14:11 /opt/homebrew/bin/mvn -> ../Cellar/maven/3.10.0/bin/mvn
+--- IDEs
+/Users/c425/.vscode/extensions/redhat.java-1.58.0-darwin-arm64/jre/25.0.4.1-macosx-aarch64/bin/java -Djdk.xml.maxGeneral
