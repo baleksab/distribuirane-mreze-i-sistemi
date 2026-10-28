@@ -1,18 +1,17 @@
 # Domaći zadatak 1 – Istražite sopstvenu JVM
 
-Okruženje: macOS (arm64), JDK-ovi instalirani preko Homebrew-a. Sirovi izlazi komandi nalaze se u folderu `outputs/`.
+Sve sam radio na Mac-u (arm64), a JDK-ovi su instalirani preko Homebrew-a. Ispis svih komandi sam sačuvao u folderu `outputs/`, pa se svaki navedeni rezultat može proveriti.
 
-## Sadržaj foldera
+## Šta se nalazi u folderu
 
 | Fajl | Čemu služi |
 |---|---|
-| `ThreadLab.java` | Zadati program: pokreće tri niti `worker-N` i sluša na portu (podrazumevano 9090). Nije menjan. |
-| `MemLab.java` | Pomoćni program za zadatak 04: meri koliko nizova od 1 MB staje u heap (`heap`) i koliko duboka rekurzija staje na stek (`stack`). |
-| `EncodingLab.java` | Pomoćni program za zadatak 05: upisuje tekst kao UTF-8, čita ga kao windows-1250 i ispisuje svaki pogrešan znak. |
-| `outputs/` | Sirovi izlazi svih komandi i eksperimenata. |
-| `out/` | Prevedene `.class` datoteke (nisu potrebne za predaju). |
+| `ThreadLab.java` | Program koji smo dobili uz zadatak. Pokreće tri niti `worker-N` i sluša na portu (podrazumevano 9090). Nisam ga menjao. |
+| `MemLab.java` | Moj pomoćni program za zadatak 04. Sa `heap` meri koliko nizova od 1 MB stane u heap, a sa `stack` koliko duboko ide rekurzija. |
+| `EncodingLab.java` | Moj pomoćni program za zadatak 05. Upisuje tekst kao UTF-8, čita ga kao windows-1250 i ispisuje svaki pogrešan znak. |
+| `outputs/` | Ispis komandi i eksperimenata, onako kako ga je terminal prikazao. |
 
-Pokretanje:
+Ako želite sve da pokrenete sami:
 
 ```
 javac -encoding UTF-8 -d out ThreadLab.java MemLab.java EncodingLab.java
@@ -26,26 +25,26 @@ java -cp out EncodingLab
 
 ## 01 Okruženje
 
-**Šta je urađeno:** upoređeno je koji JDK koriste komanda `java`, Maven (`mvn -v`) i IDE-ovi (IntelliJ IDEA i VS Code). Izlazi su u `outputs/01-environment.txt` i `outputs/01b-ide-and-jdk27.txt`.
+Hteo sam da vidim koji JDK koriste komanda `java`, Maven i moji IDE-ovi (IntelliJ IDEA i VS Code). Ispis je u `outputs/01-environment.txt` i `outputs/01b-ide-and-jdk27.txt`.
 
-| Alat | JDK koji koristi | Kako se bira |
+| Alat | Koji JDK koristi | Zašto baš taj |
 |---|---|---|
-| `java` (terminal) | OpenJDK **27.0.1** (pre instalacije Mavena bio je 25.0.4.1) | `/usr/bin/java` je samo macOS stub koji pita `java_home`, a ovaj bira **najnoviji** instalirani JDK |
-| `mvn -v` | OpenJDK **27.0.1** (`/opt/homebrew/Cellar/openjdk/27.0.1.0.3/...`) | Brew skripta za `mvn`: `JAVA_HOME="${JAVA_HOME:-/opt/homebrew/opt/openjdk/...}"`, tj. koristi `JAVA_HOME` ako je postavljen, a inače Brew-ov najnoviji `openjdk` |
-| VS Code (Java ekstenzija) | sopstveni JRE **25.0.4.1** | ugrađen u ekstenziju `redhat.java` |
-| IntelliJ IDEA 2025.2 | SDK podešen po projektu u `jdk.table.xml`: `openjdk-21` (folder više ne postoji) i `openjdk@25` | podešavanje projekta, ne `JAVA_HOME` |
+| `java` u terminalu | OpenJDK **27.0.1** (pre instalacije Mavena bio je 25.0.4.1) | `/usr/bin/java` je samo macOS stub. On pita `java_home`, a ovaj uzima **najnoviji** instalirani JDK. |
+| `mvn -v` | OpenJDK **27.0.1** | Brew-ova skripta za `mvn` radi `JAVA_HOME="${JAVA_HOME:-/opt/homebrew/opt/openjdk/...}"`. Znači, uzima `JAVA_HOME` ako postoji, a ako ne, Brew-ov najnoviji `openjdk`. |
+| VS Code | sopstveni JRE **25.0.4.1** | Dolazi upakovan u Java ekstenziju (`redhat.java`). |
+| IntelliJ IDEA 2025.2 | SDK podešen po projektu: `openjdk-21` i `openjdk@25` | Podešava se u projektu, `JAVA_HOME` ga ne zanima. |
 
-`JAVA_HOME` nije postavljen. U `PATH`-u postoji i putanja `/opt/homebrew/opt/openjdk@21/bin`, ali JDK 21 nije instaliran pa ona nema nikakvog efekta.
+`JAVA_HOME` kod mene nije postavljen. U `PATH`-u imam i `/opt/homebrew/opt/openjdk@21/bin`, ali JDK 21 uopšte nije instaliran, pa je ta putanja beskorisna. Isto važi za `openjdk-21` u IntelliJ-u, jer folder na koji pokazuje više ne postoji.
 
-**Zašto se razlikuju:** svaki alat ima svoje pravilo za izbor JDK-a. Terminalski `java` koristi `java_home` (najnoviji), Maven koristi `JAVA_HOME` ili svoj Brew podrazumevani JDK, a IDE-ovi koriste ugrađeni JRE ili SDK podešen po projektu. Ništa ih ne primorava da se poklope.
+**Zašto se razlikuju:** svaki alat ima svoje pravilo za izbor JDK-a. Terminal ide preko `java_home`, Maven preko `JAVA_HOME` ili svoje podrazumevane vrednosti, a IDE-ovi koriste ono što im je ugrađeno ili podešeno u projektu. Ništa ih ne tera da se slože, pa se često i ne slažu.
 
-**Važna napomena:** pre `brew install maven` komanda `java` je pokazivala na JDK 25, a `mvn` nije postojao. Maven zavisi od formule `openjdk` (bez broja verzije), pa je instalacija povukla i JDK 27, što je tiho promenilo rezultat komande `java`. Zadaci 02–05 prvi put su izvršeni na JDK 25, a memorijski testovi su ponovljeni na JDK 27 sa istim rezultatima.
+**Jedna stvar na koju treba paziti:** pre `brew install maven` komanda `java` je pokazivala na JDK 25, a `mvn` nije ni postojao. Maven u Brew-u zavisi od formule `openjdk` (bez broja verzije), pa je instalacija usput povukla i JDK 27, a time se promenilo i šta radi `java`. Zadatke 02–05 sam prvo uradio na JDK 25, a memorijske testove sam posle ponovio na 27. Rezultati su isti.
 
 ---
 
 ## 02 Niti i port
 
-**Šta je urađeno:** `ThreadLab` je preveden i pokrenut, a zatim su `jps`, `lsof`, `netstat` i `jcmd` upotrebljeni da se pronađu PID, port i radne niti. Izlazi su u `outputs/02-jps.txt` i `outputs/02-port-threads.txt`.
+Kompajlirao sam i pokrenuo `ThreadLab`, pa pomoću `jps`, `lsof`, `netstat` i `jcmd` našao PID, port i radne niti. Ispis je u `outputs/02-jps.txt` i `outputs/02-port-threads.txt`.
 
 ```
 $ jps -l
@@ -64,16 +63,16 @@ $ jcmd 13251 Thread.print | grep -A2 worker-
 "worker-3" #27 ... java.lang.Thread.State: TIMED_WAITING (sleeping)
 ```
 
-**Objašnjenje:**
-- `jps` daje PID Java procesa (13251).
-- `netstat` na macOS-u nema opciju `-p <pid>`, pa se za vezu PID–port koristi `lsof`. Ona pokazuje da proces 13251 sluša na `*:9090` (IPv6 soket prihvata i IPv4, otuda `tcp46`).
-- `jcmd ... Thread.print` ispisuje sve niti JVM-a. Tri radne niti stoje u `Thread.sleep(Long.MAX_VALUE)`, pa su u stanju `TIMED_WAITING (sleeping)`. Glavna nit je blokirana u `accept()`.
+Šta se tu vidi:
+- `jps` daje PID procesa, a to je 13251.
+- `netstat` na macOS-u nema opciju `-p <pid>` kao na Linuxu, pa sam vezu između PID-a i porta našao preko `lsof`. Proces 13251 sluša na `*:9090`. Soket je IPv6, ali prima i IPv4 veze, zato u `netstat`-u piše `tcp46`.
+- `jcmd ... Thread.print` ispisuje sve niti u JVM-u. Sve tri radne niti samo spavaju u `Thread.sleep(Long.MAX_VALUE)`, pa su u stanju `TIMED_WAITING (sleeping)`. Glavna nit čeka na `accept()`.
 
 ---
 
 ## 03 Zauzet port
 
-**Šta je urađeno:** `ThreadLab` je pokrenut drugi put dok prvi još radi, a zatim je greška rešena na dva načina. Izlaz je u `outputs/03-port-in-use.txt`.
+Kad sam `ThreadLab` pokrenuo drugi put, dok je prvi još radio, dobio sam ovo (`outputs/03-port-in-use.txt`):
 
 ```
 PID 13303
@@ -83,20 +82,20 @@ Exception in thread "main" java.net.BindException: Address already in use
     at ThreadLab.main(ThreadLab.java:8)
 ```
 
-**Uzrok:** prvi proces već drži `*:9090` u stanju LISTEN. Operativni sistem dozvoljava samo jedan slušajući soket po adresi i portu, pa `bind()` ne uspeva i `new ServerSocket(port)` baca izuzetak.
+**Zašto:** prvi proces već drži `*:9090`. Operativni sistem dozvoljava samo jedan slušajući soket po adresi i portu, pa `bind()` ne uspe, a `new ServerSocket(port)` baci izuzetak.
 
-**Zanimljivo zapažanje:** drugi proces se nije ugasio. `jps` ga je i dalje prikazivao, a `jcmd` je pokazao njegove 3 niti `worker-`. Niti se pokreću pre otvaranja soketa i nisu daemon niti, pa JVM ostaje živ iako je `main` pao. Proces je morao ručno da se ubije (`kill`).
+**Neočekivano:** drugi proces se nije ugasio. `jps` ga je i dalje prikazivao, a `jcmd` je pokazao njegove tri niti `worker-`. Niti se pokreću pre otvaranja soketa i nisu daemon, pa JVM ostaje živ i kad `main` padne. Morao sam da ga ubijem ručno komandom `kill`.
 
-**Rešenje 1, bez gašenja prvog procesa:** drugi port, jer program prihvata port kao argument.
+**Rešenje 1, bez gašenja prvog procesa:** pokrenem program na drugom portu, jer ga `ThreadLab` prima kao argument.
 
 ```
 $ java ThreadLab 9091
 Slušam na portu 9091
 ```
 
-`lsof` je prikazao oba procesa: 9090 (13251) i 9091 (13351).
+`lsof` je posle toga pokazao oba procesa, 13251 na portu 9090 i 13351 na portu 9091.
 
-**Rešenje 2, sa gašenjem prvog procesa:** pronađe se proces koji drži port, ugasi se, pa se program pokrene ponovo na 9090.
+**Rešenje 2, sa gašenjem prvog procesa:** nađem ko drži port, ugasim ga i pokrenem program ponovo na 9090.
 
 ```
 $ lsof -ti :9090      ->  13251
@@ -108,41 +107,41 @@ $ java ThreadLab      ->  Slušam na portu 9090
 
 ## 04 Memorija
 
-**Šta je urađeno:** `MemLab heap` u listu stavlja nizove `new byte[1024 * 1024]` dok ne dobije `OutOfMemoryError` i ispisuje koliko ih je stalo. `MemLab stack` rekurzivno poziva metodu dok ne dobije `StackOverflowError` i ispisuje dubinu. Svaka konfiguracija pokrenuta je 3 puta. Izlaz je u `outputs/04-05-results.txt`. Podrazumevani GC je G1, a veličina regiona je 1 MB za oba heap-a.
+Za ovaj zadatak sam napisao `MemLab`. U režimu `heap` stavlja u listu nizove `new byte[1024 * 1024]` dok ne dobije `OutOfMemoryError`, pa ispiše koliko ih je stalo. U režimu `stack` rekurzivno poziva metodu dok ne dobije `StackOverflowError`, pa ispiše dubinu. Svaku konfiguraciju sam pokrenuo po 3 puta (`outputs/04-05-results.txt`). Garbage collector je podrazumevani G1, a region je veličine 1 MB u oba slučaja.
 
-| Podešavanje | Rezultat (3 pokretanja) | Teorijski maksimum |
+| Podešavanje | Rezultat (3 pokretanja) | Šta bismo očekivali |
 |---|---|---|
 | `-Xmx32m` | 15 nizova (15 / 15 / 15) | 32 |
 | `-Xmx128m` | 63 niza (63 / 63 / 63) | 128 |
-| `-Xss256k` | dubina 1479 (1479 / 1479 / 1479; na JDK 27: 1478) | – |
+| `-Xss256k` | dubina 1479 (1479 / 1479 / 1479, na JDK 27: 1478) | – |
 | `-Xss2m` | dubina oko 45 300–46 200 (45261 / 45664 / 46202) | – |
 
-Dodatna provera: sa `-XX:+UseSerialGC` staje 28 nizova uz `-Xmx32m` i 118 uz `-Xmx128m`.
+Za poređenje sam probao i Serial GC (`-XX:+UseSerialGC`): staje 28 nizova uz `-Xmx32m` i 118 uz `-Xmx128m`.
 
-**Odstupanje kod heap-a:** staje otprilike duplo manje nizova nego što bi se očekivalo. G1 deli heap na regione od 1 MB. Niz od 1 MB plus zaglavlje veći je od polovine regiona, pa se tretira kao *humongous* objekat i zauzima 2 uzastopna regiona. Zato staje oko `Xmx/2` nizova (32 regiona daju oko 16, 128 regiona oko 64), a još jedan region ili dva odu na ostale žive objekte. Serial GC nema humongous regione pa se približava granici (28 i 118). Ostatak se gubi na mladu generaciju i survivor prostore, jer veliki nizovi moraju da žive u staroj generaciji.
+**Zašto heap daje duplo manje nego što očekujemo:** G1 deli heap na regione od 1 MB. Niz od 1 MB plus zaglavlje je malo veći od jednog regiona, pa ga G1 tretira kao *humongous* objekat i daje mu 2 uzastopna regiona. Zato staje otprilike `Xmx/2` nizova (32 regiona daju oko 16, 128 regiona oko 64), a jedan do dva regiona odu na ostale žive objekte. Serial GC nema humongous regione, pa se približava limitu (28 i 118). Ni on ne stigne do kraja, jer deo heap-a zauzimaju mlada generacija i survivor prostori, a veliki nizovi moraju da završe u staroj generaciji.
 
-**Odstupanje kod steka:** dubina nije proporcionalna veličini steka (8 puta veći stek daje oko 30 puta veću dubinu). Deo steka je rezervisan za zaštitne zone. Mnogo važnije je da veličina okvira zavisi od načina izvršavanja. Kod 256k do prekoraka dolazi dok se metoda još *interpretira* (veliki okviri, oko 170 B, pa je broj determinističan). Kod 2m JIT kompajler prevede `recurse()` usred rekurzije, kompajlirani okviri su znatno manji (oko 45 B), pa je dubina veća i malo varira od pokretanja do pokretanja.
+**Zašto dubina rekurzije nije proporcionalna steku:** stek je 8 puta veći, a dubina oko 30 puta veća. Deo steka JVM rezerviše za zaštitne zone, ali je važnije to što veličina okvira zavisi od načina izvršavanja koda. Na 256k prekoračenje nastaje dok se metoda još interpretira. Okviri su tada veliki (oko 170 B), pa je rezultat uvek isti. Na 2m JIT kompajler prevede `recurse()` dok rekurzija traje, kompajlirani okviri su mnogo manji (oko 45 B), pa ide dublje, i to malo drugačije u svakom pokretanju.
 
 ---
 
 ## 05 Encoding
 
-**Šta je urađeno:** tekst `Čačak, Šabac, Žabalj, Ćuprija, Đerdap` upisan je u `outputs/encoding.txt` kao UTF-8, a zatim pročitan kao windows-1250. U izvornom kodu slova su pisana kao `\u` escape sekvence da sam izvorni fajl ne bi bio dodatna promenljiva. Izlaz je u `outputs/04-05-results.txt`.
+Tekst `Čačak, Šabac, Žabalj, Ćuprija, Đerdap` upisao sam u `outputs/encoding.txt` kao UTF-8, a zatim ga pročitao kao windows-1250. U izvornom kodu slova su napisana kao `\u` sekvence, da sam izvorni fajl ne bi uticao na rezultat.
 
 ```
 original: Čačak, Šabac, Žabalj, Ćuprija, Đerdap
 as 1250 : ÄŚaÄŤak, Ĺ abac, Ĺ˝abalj, Ä†uprija, Ä�erdap
 ```
 
-**Zašto dolazi do greške:** svako slovo van ASCII-ja u UTF-8 zauzima 2 bajta. windows-1250 je jednobajtni encoding, pa se svaki bajt pretvara u poseban znak. Zato se jedno ispravno slovo pretvara u dva pogrešna znaka. ASCII slova (`a`, `b`, `k`, ...) ostaju ista jer su im kodovi isti u oba encodinga.
+**Zašto se kvari:** u UTF-8 svako slovo van ASCII-ja zauzima 2 bajta. windows-1250 je jednobajtni encoding, pa svaki od ta 2 bajta pročita kao zaseban znak. Zato od jednog slova dobijamo dva pogrešna znaka. ASCII slova (`a`, `b`, `k`...) prolaze neoštećena jer imaju iste kodove u oba encodinga.
 
-| Original | UTF-8 bajtovi | Kako ih windows-1250 čita |
+| Slovo | UTF-8 bajtovi | Šta windows-1250 vidi |
 |---|---|---|
-| Č | C4 8C | C4 = `Ä`, 8C = `Ś` → **ÄŚ** |
-| č | C4 8D | C4 = `Ä`, 8D = `Ť` → **ÄŤ** |
-| Š | C5 A0 | C5 = `Ĺ`, A0 = nerazdvojivi razmak → **Ĺ** + razmak |
-| Ž | C5 BD | C5 = `Ĺ`, BD = `˝` → **Ĺ˝** |
-| Ć | C4 86 | C4 = `Ä`, 86 = `†` → **Ä†** |
-| Đ | C4 90 | C4 = `Ä`, 90 **nije definisan** u windows-1250 → **Ä** + zamenski znak U+FFFD (**Ä�**) |
+| Č | C4 8C | C4 je `Ä`, 8C je `Ś`, ispadne **ÄŚ** |
+| č | C4 8D | C4 je `Ä`, 8D je `Ť`, ispadne **ÄŤ** |
+| Š | C5 A0 | C5 je `Ĺ`, A0 je nedeljivi razmak, ispadne **Ĺ** i razmak |
+| Ž | C5 BD | C5 je `Ĺ`, BD je `˝`, ispadne **Ĺ˝** |
+| Ć | C4 86 | C4 je `Ä`, 86 je `†`, ispadne **Ä†** |
+| Đ | C4 90 | C4 je `Ä`, a 90 u windows-1250 **nije definisan**, pa ispadne **Ä** i zamenski znak U+FFFD (**Ä�**) |
 
-Prvi bajt (C4 ili C5) određuje prvi znak: C4 daje `Ä`, a C5 daje `Ĺ`. Drugi bajt se čita iz tabele windows-1250, a bajt 0x90 u njoj nema dodeljen znak. Zato je `Đ` jedino slovo koje daje zamenski znak, tj. gubi informaciju. Isti efekat vidi se i u samom tekstu zadatka (`Ĉaĉak`, `Ţabalj`), koji je oštećen pogrešnom konverzijom encodinga.
+Prvi bajt određuje prvi znak: C4 uvek daje `Ä`, a C5 uvek `Ĺ`. Drugi bajt se traži u tabeli windows-1250, a na poziciji 0x90 u njoj nema ničega. Zato je `Đ` jedino slovo koje daje zamenski znak, i jedino kod koga se informacija zaista gubi, jer se original više ne može rekonstruisati. Ista vrsta greške vidi se i u samom tekstu zadatka (`Ĉaĉak`, `Ţabalj`), koji je očigledno prošao kroz pogrešnu konverziju encodinga.
